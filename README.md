@@ -6,6 +6,11 @@
 Python Flask + (react, Vue.js or Html)
 
 ## 1. 기능 정의
+1. 명언 짤 만들기(이미지 흑백 처리, 텍스트 입력)
+2. DICOM Web Viewer(단순 이미지 출력, 중요 tag)
+3. Yolo
+4. 3번의 실시간 처리(가능하다면)
+5. MNIST + Canvas
 
 
 ## 개발 일기 및 예정
