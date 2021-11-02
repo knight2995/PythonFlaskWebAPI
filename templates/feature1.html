@@ -13,7 +13,7 @@
     <br>
     명언 입력
     <br>
-    <textarea id="text" name="text" rows="10" cols="10" placeholder="여기에 명언을 입력" wrap="physical"></textarea>
+    <textarea id="text" name="text" rows="15" cols="30" placeholder="여기에 명언을 입력" wrap="physical"></textarea>
     <br>
     <br>
     <br>
@@ -54,7 +54,7 @@
             redirect: 'follow'
         };
 
-        fetch("http://127.0.0.1:5000/wise-saying/", requestOptions)
+        fetch("{{base_url}}/wise-saying/", requestOptions)
             .then(response => {
                 return response.json()
             })

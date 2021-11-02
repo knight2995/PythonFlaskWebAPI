@@ -8,11 +8,19 @@ import base64, json
 def make_wise_saying(file: werkzeug.datastructures.FileStorage, text: str) -> str:
     # load Image
     img = cv2.imdecode(np.fromstring(file.read(), np.uint8), cv2.IMREAD_UNCHANGED)
+
+    # resize image
+    # width, height, channels
+    img_height, img_width, _ = img.shape
+    if img_width > 512 or img_height > 512:
+        ratio = max(img_width, img_height) / 512
+        img = cv2.resize(img, dsize=(0, 0), fx=1/ratio, fy=1/ratio, interpolation=cv2.INTER_AREA)
+
     # convert to grayScale
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     # make 3-channels grayscale
-    img = np.zeros_like(img)
+    img = np.zeros((img.shape[0], img.shape[1], 3), np.uint8)
     img[:, :, 0] = gray
     img[:, :, 1] = gray
     img[:, :, 2] = gray
