@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DICOM Web 뷰어</title>
+    DICOM 파일을 보기 위한 뷰어입니다.
+    <br>
+    파일을 선택하고, 원하는 명언을 입력하고 전송 버튼을 누르면 확인할 수 있습니다.<br>
+
+    <br>
+    <input type="file" id="file">
+    <input type="button" value="버튼" onclick="go()">
+    <br>
+    명언 입력
+    <br>
+    <br>
+
+    <img id= "image", src="">
+
+</head>
+<body>
+
+</body>
+
+<script>
+
+
+    function go() {
+
+        var myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+
+        var formdata = new FormData();
+        formdata.append("file", document.getElementById("file").files[0])
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: formdata,
+            redirect: 'follow'
+        };
+
+        fetch("{{base_url}}/dicom-viewer/", requestOptions)
+            .then(response => {
+                return response.json()
+            })
+            .then(data => {
+                jsonv = JSON.parse(data)
+                document.getElementById("image").src = 'data:image/png;base64,' + jsonv.imgData
+            })
+            .catch(error => console.log('error', error));
+
+    }
+
+</script>
+</html>

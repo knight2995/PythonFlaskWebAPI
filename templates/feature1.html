@@ -62,7 +62,7 @@
                 jsonv = JSON.parse(data)
                 document.getElementById("image").src = 'data:image/jpeg;base64,' + jsonv.imgData
             })
-            .catch(error => console.log('error', error));
+            .catch(error => console.log('에러 : error', error));
 
     }
 
