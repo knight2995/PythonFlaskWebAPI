@@ -23,6 +23,7 @@ api.add_namespace(dicom_viewer_namespace, "/dicom-viewer")
 api.add_namespace(yolo_namespace, "/detect-yolo")
 
 
+
 # 테스트를 위한 더미 등록
 @app.route("/명언제조기")
 def 명언제조기():
@@ -31,6 +32,7 @@ def 명언제조기():
 @app.route("/DICOM뷰어")
 def DICOM뷰어():
     return render_template('feature2.html', base_url=app.config['BASE_URL'])
+
 
 @app.route("/Yolo")
 def Yolo():
