@@ -17,8 +17,11 @@ api = Api(app, version='0.1', title='API', description='PythonFlaskWebAPI')
 # Controller 등록
 from api.Controller.wise_saying_controller import wise_saying_namespace
 from api.Controller.dicom_viewer_controller import dicom_viewer_namespace
+from api.Controller.yolo_controller import yolo_namespace
 api.add_namespace(wise_saying_namespace, '/wise-saying')
 api.add_namespace(dicom_viewer_namespace, "/dicom-viewer")
+api.add_namespace(yolo_namespace, "/detect-yolo")
+
 
 
 # 테스트를 위한 더미 등록
@@ -29,6 +32,11 @@ def 명언제조기():
 @app.route("/DICOM뷰어")
 def DICOM뷰어():
     return render_template('feature2.html', base_url=app.config['BASE_URL'])
+
+
+@app.route("/Yolo")
+def Yolo():
+    return render_template('feature3.html', base_url=app.config['BASE_URL'])
 
 
 if __name__ == "__main__":
