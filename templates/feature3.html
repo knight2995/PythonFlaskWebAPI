@@ -8,7 +8,7 @@
     파일을 선택하고, 원하는 명언을 입력하고 전송 버튼을 누르면 확인할 수 있습니다.<br>
 
     <br>
-    <input type="file" id="file">
+    <input type="file" id="file" onchange="loadFile(event)">
     <input type="button" value="버튼" onclick="go()">
     <br>
     명언 입력
@@ -23,6 +23,15 @@
 </body>
 
 <script>
+
+    function loadFile(event) {
+
+    var output = document.getElementById('image');
+    output.src = URL.createObjectURL(event.target.files[0]);
+    output.onload = function() {
+      URL.revokeObjectURL(output.src) // free memory
+    }
+  }
 
 
     function go() {
@@ -46,7 +55,7 @@
             })
             .then(data => {
                 jsonv = JSON.parse(data)
-                document.getElementById("image").src = 'data:image/jpeg;base64,' + jsonv.imgData
+                document.getElementById("image").src = 'data:image/png;base64,' + jsonv.imgData
             })
             .catch(error => console.log('error', error));
 
