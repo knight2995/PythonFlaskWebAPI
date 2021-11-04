@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Yolo</title>
-    DICOM 파일을 보기 위한 뷰어입니다.
+    Yolo Detect 기능을 활용해보는 페이지입니다.
     <br>
-    파일을 선택하고, 원하는 명언을 입력하고 전송 버튼을 누르면 확인할 수 있습니다.<br>
+    파일을 선택하고 전송 버튼을 누르면 확인할 수 있습니다.<br>
+    성능상의 문제로 yolov5의 제일 적은 프라미터를 이용하였습니다.
 
     <br>
     <input type="file" id="file" onchange="loadFile(event)">
-    <input type="button" value="버튼" onclick="go()">
+    <input type="button" value="전송" onclick="go()">
     <br>
     명언 입력
     <br>
@@ -28,6 +29,7 @@
 
     var output = document.getElementById('image');
     output.src = URL.createObjectURL(event.target.files[0]);
+
     output.onload = function() {
       URL.revokeObjectURL(output.src) // free memory
     }

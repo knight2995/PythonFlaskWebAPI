@@ -9,7 +9,7 @@
     이미지를 전송하고 grayscale 변환을 수행하고 가로로 검은색의 같은 크기의 이미지를 붙이고 텍스트를 삽입합니다.
     <br>
     <input type="file" id="file" onchange="loadFile(event)">
-    <input type="button" value="버튼" onclick="go()">
+    <input type="button" value="전송" onclick="go()">
     <br>
     명언 입력
     <br>
@@ -25,7 +25,7 @@
 
 </body>
 
-<script>
+<script defer>
     function loadFile(event) {
 
     var output = document.getElementById('image');

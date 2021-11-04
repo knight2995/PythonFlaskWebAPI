@@ -25,6 +25,11 @@ api.add_namespace(yolo_namespace, "/detect-yolo")
 
 
 # 테스트를 위한 더미 등록
+@app.route("/main")
+def mainView():
+    return render_template('main.html', base_url=app.config['BASE_URL'])
+
+
 @app.route("/명언제조기")
 def 명언제조기():
     return render_template('feature1.html', base_url=app.config['BASE_URL'])

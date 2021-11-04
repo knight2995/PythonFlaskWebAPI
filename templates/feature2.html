@@ -1,21 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+  table {
+    width: 80%;
+    border: 1px solid #444444;
+  }
+  th, td {
+    border: 1px solid #444444;
+  }
+</style>
     <meta charset="UTF-8">
     <title>DICOM Web 뷰어</title>
     DICOM 파일을 보기 위한 뷰어입니다.
     <br>
-    파일을 선택하고, 원하는 명언을 입력하고 전송 버튼을 누르면 확인할 수 있습니다.<br>
+    파일을 선택하고, 전송 버튼을 누르면 확인할 수 있습니다.<br>
 
     <br>
     <input type="file" id="file">
-    <input type="button" value="버튼" onclick="go()">
-    <br>
-    명언 입력
+    <input type="button" value="전송(기본 태그)" onclick="go('standard')">
+    <input type="button" value="전송(전체 태그)" onclick="go('all')">
     <br>
     <br>
 
-    <img id= "image", src="">
+
+    <img id= "image", src=""><br>
+
+    <br>
+
+    <table id = 'tags_table'>
+
+    </table>
+
+
 
 </head>
 <body>
@@ -24,14 +41,46 @@
 
 <script>
 
+    function view_standard(tags){
 
-    function go() {
+        table = document.getElementById('tags_table')
+
+        innerHtml = ''
+        for (const [key, value] of Object.entries(tags)) {
+            // tr 만들기
+            innerHtml += '<tr>'
+            innerHtml += '<td>' + key + '</td>'
+            innerHtml += '<td>' + value + '</td>'
+            innerHtml += '</tr>'
+        }
+        table.innerHTML = innerHtml
+
+    }
+
+    function view_all(tags){
+
+        table = document.getElementById('tags_table')
+
+        innerHtml = ''
+        for (let i = 0; i < tags.length; i++) {
+            // tr 만들기
+            innerHtml += '<tr>'
+            innerHtml += '<td><pre>' + tags[i][0]['(Group,Element)'] + '</pre></td>'
+            innerHtml += '<td>' + tags[i][1]['(TAG Description)'] + '</td>'
+            innerHtml += '<td>' + tags[i][2]['(Value)'] + '</td>'
+            innerHtml += '</tr>'
+        }
+        table.innerHTML = innerHtml
+    }
+
+    function go(type) {
 
         var myHeaders = new Headers();
         myHeaders.append("Accept", "application/json");
 
         var formdata = new FormData();
         formdata.append("file", document.getElementById("file").files[0])
+        formdata.append("type", type)
 
         var requestOptions = {
             method: 'POST',
@@ -47,6 +96,20 @@
             .then(data => {
                 jsonv = JSON.parse(data)
                 document.getElementById("image").src = 'data:image/png;base64,' + jsonv.imgData
+                console.log(data)
+                tags = jsonv.tags
+
+                if(type == 'standard'){
+                    view_standard(tags)
+                }
+                else{
+                    view_all(tags)
+                }
+
+
+
+
+
             })
             .catch(error => console.log('error', error));
 

@@ -20,10 +20,10 @@ class DicomViewer(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('file', location='files',
                             type=werkzeug.datastructures.FileStorage, required=True)
-
+        parser.add_argument('type', required=True)
         args = parser.parse_args()
 
         file_object = args['file']
-        v = convert_dicom_image_to_png(file_object)
+        v = convert_dicom_image_to_png(file_object, args['type'])
 
         return v, 200

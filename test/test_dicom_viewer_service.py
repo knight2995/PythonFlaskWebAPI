@@ -1,12 +1,17 @@
 from unittest import TestCase
 
-from api.Service.dicom_viewer_service import convert_dicom_image_to_png
+import pydicom
+
+from api.Service.dicom_viewer_service import get_tags_all
 
 class Test(TestCase):
-    def test_convert_dicom_image_to_png(self):
+    def test_dicom_data_view(self):
 
 
-        convert_dicom_image_to_png(None)
+        ds: pydicom.FileDataset = pydicom.read_file('10007.dcm')
+
+        get_tags_all(ds)
 
 
-        self.fail()
+
+
