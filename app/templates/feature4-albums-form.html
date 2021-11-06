@@ -1,0 +1,73 @@
+<style>
+    .container {
+	display: grid;
+        grid-template-columns: 200px 200px 200px;
+	/* grid-template-columns: 1fr 1fr 1fr */
+	/* grid-template-columns: repeat(3, 1fr) */
+	/* grid-template-columns: 200px 1fr */
+	/* grid-template-columns: 100px 200px auto */
+
+	grid-template-rows: 200px 200px 200px;
+	/* grid-template-rows: 1fr 1fr 1fr */
+	/* grid-template-rows: repeat(3, 1fr) */
+	/* grid-template-rows: 200px 1fr */
+	/* grid-template-rows: 100px 200px auto */
+    }
+    .item {
+        border-style: solid;
+    }
+</style>
+
+<h1> 기능 </h1>
+    앨범 조회를 누르면 나오는 앨범을 클릭하시면 안으로 들어갈 수 있습니다.
+
+    <input type="button" onclick="go()" value="앨범 조회">
+
+<div class="container" id="innerContainer">
+</div>
+
+
+<script>
+
+   function go() {
+
+       document.getElementById('innerContainer').innerHTML = ''
+
+        var myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append('Authorization', 'Bearer ' + jwt_key)
+
+
+        var requestOptions = {
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+
+        fetch("{{base_url}}/albums", requestOptions)
+            .then(response => {
+                return (response.json())
+            })
+            .then(data => {
+                jsonv = JSON.parse(data)
+                albums = jsonv.albums
+
+                container = document.getElementById('innerContainer')
+                for (let i = 0; i < albums.length; i++) {
+                    var a = document.createElement("a")
+                    a.setAttribute("href",'javascript:load_photos_form(' + albums[i].idx + ')')
+                    a.append(albums[i].album_name)
+                    var div = document.createElement("div");
+                    div.setAttribute('class', 'item')
+                    div.setAttribute('id', albums[i].idx)
+                    div.append(a)
+                    container.append(div)
+                }
+
+
+            })
+            .catch(error => console.log('에러 : error', error));
+
+    }
+
+</script>

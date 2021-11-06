@@ -1,7 +1,7 @@
 import werkzeug.datastructures
 from flask_restx import Resource, Namespace, reqparse
 
-from api.Service.yolo_service import detect_yolo
+from app.api.service.yolo_service import detect_yolo
 
 
 yolo_namespace = Namespace(

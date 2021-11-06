@@ -1,7 +1,7 @@
 import werkzeug.datastructures
 from flask_restx import Resource, Namespace, reqparse
 
-from api.Service.wise_saying_service import make_wise_saying
+from app.api.service.wise_saying_service import make_wise_saying
 
 
 wise_saying_namespace = Namespace(

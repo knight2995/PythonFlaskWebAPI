@@ -1,0 +1,42 @@
+<h1>회원가입 기능</h1>
+
+<div>
+
+    id : <input type="text" name="id" id="id"> <br>
+    pw : <input tpye="text" name="password" id="password"> <br>
+
+    <input type="button" onclick="go()" value="회원가입">
+
+
+</div>
+
+<script>
+
+    function go() {
+
+        var myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+
+        var formdata = new FormData();
+        formdata.append("id", document.getElementById("id").value)
+        formdata.append("password", document.getElementById("password").value)
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: formdata,
+            redirect: 'follow'
+        };
+
+        fetch("{{base_url}}/users", requestOptions)
+            .then(response => {
+                return response.json()
+            })
+            .then(data => {
+                alert(data)
+            })
+            .catch(error => console.log('에러 : error', error));
+
+    }
+
+</script>

@@ -1,0 +1,46 @@
+<h1>로그인 기능</h1>
+
+<div>
+    성공 시 access_token 발급 <br>
+    id : <input type="text" name="id" id="id"> <br>
+    pw : <input tpye="text" name="password" id="password"> <br>
+
+    <input type="button" onclick="go()" value="로그인">
+
+    <input type="text" readonly id ="token">
+
+
+</div>
+
+<script>
+
+    function go() {
+
+        var myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+
+        var formdata = new FormData();
+        formdata.append("id", document.getElementById("id").value)
+        formdata.append("password", document.getElementById("password").value)
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: formdata,
+            redirect: 'follow'
+        };
+
+        fetch("{{base_url}}/auth/login", requestOptions)
+            .then(response => {
+                return (response.json())
+            })
+            .then(data => {
+                jsonv = JSON.parse(data)
+                document.getElementById('token').value = jsonv.token
+                jwt_key = jsonv.token
+            })
+            .catch(error => console.log('에러 : error', error));
+
+    }
+
+</script>

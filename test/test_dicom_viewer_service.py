@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import pydicom
 
-from api.Service.dicom_viewer_service import get_tags_all
+from app.api.service.dicom_viewer_service import get_tags_all
 
 class Test(TestCase):
     def test_dicom_data_view(self):

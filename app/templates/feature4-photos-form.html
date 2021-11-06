@@ -1,0 +1,146 @@
+<style>
+    .container {
+	display: grid;
+        grid-template-columns: 200px 200px 200px;
+	/* grid-template-columns: 1fr 1fr 1fr */
+	/* grid-template-columns: repeat(3, 1fr) */
+	/* grid-template-columns: 200px 1fr */
+	/* grid-template-columns: 100px 200px auto */
+
+	grid-template-rows: 200px 200px 200px;
+	/* grid-template-rows: 1fr 1fr 1fr */
+	/* grid-template-rows: repeat(3, 1fr) */
+	/* grid-template-rows: 200px 1fr */
+	/* grid-template-rows: 100px 200px auto */
+    }
+    .item {
+        border-style: solid;
+    }
+    .load_image {
+        display:block;
+	width:100%;
+	height:auto;
+    }
+
+</style>
+
+<input type="hidden" id = 'album_idx' value="{{selected_album_idx}}">
+<h1> 기능 </h1>
+    사진 조회를 누르면 사진을 볼 수 있습니다.
+
+    <input type="button" onclick="read_photos()" value="사진 조회">
+
+
+    <input type="file" id="file" >
+    <input type="button" onclick="upload_photo()" value="사진 업로드">
+
+<div class="container" id="innerContainer">
+</div>
+
+
+<script>
+
+    function upload_photo() {
+
+        var myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append('Authorization', 'Bearer ' + jwt_key)
+
+        var formdata = new FormData();
+        formdata.append("file", document.getElementById("file").files[0])
+
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: formdata,
+            redirect: 'follow'
+        };
+
+        fetch("{{base_url}}/photos?album_idx=" + document.getElementById('album_idx').value, requestOptions)
+            .then(response => {
+                return (response.json())
+            })
+            .then(data => {
+                alert('업로드 완료 !!!')
+
+
+            })
+            .catch(error => console.log('에러 : error', error));
+
+    }
+
+    function load_photo(idx) {
+
+        var myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append('Authorization', 'Bearer ' + jwt_key)
+
+        var requestOptions = {
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+
+        container = document.getElementById('innerContainer')
+
+        fetch("{{base_url}}/photos/"+ idx, requestOptions)
+            .then(response => {
+                return (response.json())
+            })
+            .then(data => {
+                jsonv = JSON.parse(data)
+                photo = jsonv.imgData
+
+
+                var div = document.createElement("div");
+                    div.setAttribute('class', 'item')
+                    var img = document.createElement("img")
+                    img.setAttribute("src",'data:image/jpeg;base64,' + photo)
+                    img.setAttribute("class", 'load_image')
+
+                    div.append(img)
+                    container.append(div)
+            })
+            .catch(error => console.log('에러 : error', error));
+
+    }
+
+   function read_photos() {
+
+       document.getElementById('innerContainer').innerHTML = ''
+
+        var myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append('Authorization', 'Bearer ' + jwt_key)
+
+
+        var requestOptions = {
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+
+        fetch("{{base_url}}/photos?album_idx=" + document.getElementById('album_idx').value, requestOptions)
+            .then(response => {
+                return (response.json())
+            })
+            .then(data => {
+                jsonv = JSON.parse(data)
+                photos = jsonv.photos
+
+
+                for (let i = 0; i < photos.length; i++) {
+
+                    load_photo(photos[i].idx)
+
+
+                }
+
+
+            })
+            .catch(error => console.log('에러 : error', error));
+
+    }
+
+</script>

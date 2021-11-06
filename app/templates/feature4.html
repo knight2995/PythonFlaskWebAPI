@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>사진첩 API 테스트 페이지</title>
+    <script type="javascript">
+
+        function insertHTML(html, dest, append=false) {
+            // if no append is requested, clear the target element
+            if (!append) dest.innerHTML = '';
+            // create a temporary container and insert provided HTML code
+            let container = document.createElement('div');
+            container.innerHTML = html;
+            // cache a reference to all the scripts in the container
+            let scripts = container.querySelectorAll('script');
+            // get all child elements and clone them in the target element
+            let nodes = container.childNodes;
+            for (let i = 0; i < nodes.length; i++) dest.appendChild(nodes[i].cloneNode(true));
+            // force the found scripts to execute...
+            for (let i = 0; i < scripts.length; i++) {
+                let script = document.createElement('script');
+                script.type = scripts[i].type || 'text/javascript';
+                if (scripts[i].hasAttribute('src')) script.src = scripts[i].src;
+                script.innerHTML = scripts[i].innerHTML;
+                document.head.appendChild(script);
+                document.head.removeChild(script);
+            }
+        }
+
+
+
+    </script>
+    <pre>
+        <a href="javascript:load_register_form()">1. 회원가입 </a>
+        <a href="javascript:load_login_form()">2. 로그인(JWT) </a>
+        <a href="javascript:load_user_form()">2-1. 로그인 확인(JWT 필요)</a>
+        <a href="javascript:load_make_album_form()">3. 앨범 생성 </a>
+        <a href="javascript:load_read_album_form()">4. 앨범 조회 </a>
+        <a href="javascript:load_albums_form()">5. 기능 </a>
+    </pre>
+
+
+    <div id = 'container'>
+
+            메인페이지
+
+    </div>
+
+
+</head>
+<body>
+
+</body>
+
+<script>
+
+    jwt_key = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYzNjE4MjA2OSwianRpIjoiNzliMzllOGMtMDhmNS00NzdiLTkwMjQtMmE5ZmM2OTMyZmY3IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6NCwibmJmIjoxNjM2MTgyMDY5fQ.yGL9gHtpMw9MqC2xnIGZh8EbvQHmXY2PUGPtQCXRuuA'
+
+    function loadFile(event) {
+
+    var output = document.getElementById('image');
+    output.src = URL.createObjectURL(event.target.files[0]);
+
+    output.onload = function() {
+      URL.revokeObjectURL(output.src) // free memory
+    }
+  }
+
+
+    function go() {
+
+        var myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+
+        var formdata = new FormData();
+        formdata.append("file", document.getElementById("file").files[0])
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: formdata,
+            redirect: 'follow'
+        };
+
+        fetch("{{base_url}}/detect-yolo/", requestOptions)
+            .then(response => {
+                return response.json()
+            })
+            .then(data => {
+                jsonv = JSON.parse(data)
+                document.getElementById("image").src = 'data:image/png;base64,' + jsonv.imgData
+            })
+            .catch(error => console.log('error', error));
+    }
+        // load
+        // 회원가입 페이지 불러오기
+        function load_register_form(){
+            fetch("{{base_url}}//feature4-register-form")
+                    .then(response => {
+                        return response.text()
+                    })
+                .then(function (html){
+                    insertHTML(html,document.getElementById('container'))
+                })
+        }
+        function load_login_form(){
+            fetch("{{base_url}}//feature4-login-form")
+                    .then(response => {
+                        return response.text()
+                    })
+                .then(function (html){
+                    insertHTML(html,document.getElementById('container'))
+                })
+        }
+        function load_make_album_form(){
+            fetch("{{base_url}}//feature4-make-album-form")
+                    .then(response => {
+                        return response.text()
+                    })
+                .then(function (html){
+                    insertHTML(html,document.getElementById('container'))
+                })
+        }
+
+        function load_user_form(){
+
+
+            alert(jwt_key)
+
+        }
+
+    function load_read_album_form() {
+        fetch("{{base_url}}//feature4-read-album-form")
+                    .then(response => {
+                        return response.text()
+                    })
+                .then(function (html){
+                    insertHTML(html,document.getElementById('container'))
+                })
+
+
+    }
+
+    function load_albums_form() {
+
+        fetch("{{base_url}}//feature4-albums-form")
+                    .then(response => {
+                        return response.text()
+                    })
+                .then(function (html){
+                    insertHTML(html,document.getElementById('container'))
+                })
+    }
+
+    function load_photos_form(album_idx) {
+
+        fetch("{{base_url}}//feature4-photos-form?idx=" + album_idx)
+                    .then(response => {
+                        return response.text()
+                    })
+                .then(function (html){
+                    insertHTML(html,document.getElementById('container'))
+                })
+    }
+
+
+
+</script>
+</html>

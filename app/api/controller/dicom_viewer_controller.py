@@ -1,7 +1,7 @@
 import werkzeug.datastructures
 from flask_restx import Resource, Namespace, reqparse
 
-from api.Service.dicom_viewer_service import convert_dicom_image_to_png
+from app.api.service.dicom_viewer_service import convert_dicom_image_to_png
 
 
 dicom_viewer_namespace = Namespace(

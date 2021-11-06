@@ -1,0 +1,42 @@
+<h1>앨범생성 기능</h1>
+
+<div>
+
+    앨범 이름 : <input type="text" name="album_name" id="album_name"> <br>
+
+
+    <input type="button" onclick="go()" value="앨범 생성">
+
+
+</div>
+
+<script>
+
+    function go() {
+
+        var myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append('Authorization', 'Bearer ' + jwt_key)
+
+        var formdata = new FormData();
+        formdata.append("album_name", document.getElementById("album_name").value)
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: formdata,
+            redirect: 'follow'
+        };
+
+        fetch("{{base_url}}/albums", requestOptions)
+            .then(response => {
+                return response.json()
+            })
+            .then(data => {
+                alert(data)
+            })
+            .catch(error => console.log('에러 : error', error));
+
+    }
+
+</script>

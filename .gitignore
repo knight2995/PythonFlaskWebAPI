@@ -5,6 +5,9 @@
 ### DICOM ###
 *.dcm
 
+### Secret Config ###
+secret_config.py
+
 
 ### Flask ###
 instance/*
