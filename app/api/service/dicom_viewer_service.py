@@ -20,15 +20,16 @@ def convert_dicom_image_to_png(file: werkzeug.datastructures.FileStorage, type: 
     ds: pydicom.FileDataset = pydicom.read_file(file)
 
     pixel_array = ds.pixel_array  # dicom image
-    Rescale_slope = ds.RescaleSlope  # dicom header (Rescale slope)
-    Rescale_intercept = ds.RescaleIntercept  # dicom header (Rescale intercept)
-    Window_center = ds.WindowCenter  # dicom header (Window center)
-    Window_width = ds.WindowWidth  # dicom header (Window width)
-    Photometric_interpretation = ds.PhotometricInterpretation  # dicom header (Photometric interpretation)
+    # Rescale_slope = ds.RescaleSlope  # dicom header (Rescale slope)
+    # Rescale_intercept = ds.RescaleIntercept  # dicom header (Rescale intercept)
+    # Window_center = ds.WindowCenter  # dicom header (Window center)
+    # Window_width = ds.WindowWidth  # dicom header (Window width)
+    # Photometric_interpretation = ds.PhotometricInterpretation  # dicom header (Photometric interpretation)
 
     # windowed = apply_voi_lut(ds.pixel_array, ds)
 
     image = exposure.equalize_adapthist(pixel_array)
+
     saved_image = 255 * image  # Now scale by 255
     saved_image = saved_image.astype(np.uint8)
 
