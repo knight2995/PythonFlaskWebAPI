@@ -76,8 +76,9 @@ def create_app():
 
     api.add_namespace(authNS, '/auth')
     api.add_namespace(userNS, '/users')
-    api.add_namespace(photoNS, '/photos')
     api.add_namespace(albumNS, '/albums')
+    api.add_namespace(photoNS, '/photos')
+
 
     # 테스트를 위한 더미 등록
     @app.route("/main")

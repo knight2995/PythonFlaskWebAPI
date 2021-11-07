@@ -95,11 +95,18 @@
 
                 var div = document.createElement("div");
                     div.setAttribute('class', 'item')
+                    div.setAttribute('id', idx)
                     var img = document.createElement("img")
                     img.setAttribute("src",'data:image/jpeg;base64,' + photo)
                     img.setAttribute("class", 'load_image')
 
+                    var button = document.createElement("input")
+                    button.setAttribute("type","button")
+                    button.setAttribute("onclick", "javascript:delete_photo( + " + idx + ')')
+                    button.setAttribute("value", "삭제")
+
                     div.append(img)
+                    div.append(button)
                     container.append(div)
             })
             .catch(error => console.log('에러 : error', error));
@@ -141,6 +148,28 @@
             })
             .catch(error => console.log('에러 : error', error));
 
+    }
+
+    function delete_photo(idx) {
+
+        var myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append('Authorization', 'Bearer ' + jwt_key)
+
+
+        var requestOptions = {
+            method: 'DELETE',
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+
+        fetch("{{base_url}}/photos/" + idx, requestOptions)
+            .then(response => {
+                return (response.json())
+            }).then(data =>{
+                alert(data)
+                document.getElementById(idx).remove()
+        })
     }
 
 </script>

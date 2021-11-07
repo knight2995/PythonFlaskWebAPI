@@ -1,6 +1,7 @@
 import base64
 import hashlib
 import json
+from datetime import datetime
 
 import numpy as np
 import werkzeug.datastructures
@@ -26,7 +27,10 @@ def photo_upload(user_idx: int, file: werkzeug.datastructures.FileStorage, album
 
     file_data = file.read()
 
-    img_key = str(user_idx) + '_' + hashlib.md5(file_data).hexdigest()
+    dt_obj = datetime.now()
+    millisec = dt_obj.timestamp() * 1000
+
+    img_key = str(user_idx) + '_' + str(millisec) + '_' + hashlib.md5(file_data).hexdigest()
 
     s3.put_object(Body=file_data, Bucket='knight2995-photo-album', Key=img_key)
 
@@ -69,6 +73,8 @@ def find_photo_data(idx: int):
 
 
 def delete_photo(photo_idx: int):
+
+    """ Todo 검증 코드 필요함 """
     delete_photo_data([photo_repository.find_photo_by_idx(photo_idx)])
     photo_repository.delete_photo_by_idx(photo_idx)
 

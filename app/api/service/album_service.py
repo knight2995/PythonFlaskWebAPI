@@ -12,10 +12,11 @@ from app.api.service.photo_service import delete_photo_data
 
 # 앨범 추가
 def register_album(user_idx: int, album_name: str):
+
     # user
     user = user_repository.find_user_by_user_idx(user_idx=user_idx)
 
-    validate_duplicated_album_name(album_name)
+    validate_duplicated_album_name(album_name, user_idx)
 
     album = Album(album_name=album_name, user=user)
 
@@ -25,9 +26,9 @@ def register_album(user_idx: int, album_name: str):
 
 
 # 중복 체크
-def validate_duplicated_album_name(album_name: str):
-
-    if album_repository.find_album_by_album_name(album_name):
+def validate_duplicated_album_name(album_name: str, user_idx: int):
+    print(album_repository.find_album_by_album_name_and_user_idx(album_name, user_idx))
+    if album_repository.find_album_by_album_name_and_user_idx(album_name, user_idx):
 
         raise AlbumDuplicatedException
 

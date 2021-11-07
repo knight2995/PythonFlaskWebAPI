@@ -54,13 +54,24 @@
 
                 container = document.getElementById('innerContainer')
                 for (let i = 0; i < albums.length; i++) {
+
+                    //안으로 들어가서 조회
                     var a = document.createElement("a")
                     a.setAttribute("href",'javascript:load_photos_form(' + albums[i].idx + ')')
                     a.append(albums[i].album_name)
+
+                    //앨범 삭제 버튼
+                    var button = document.createElement("input")
+                    button.setAttribute("type","button")
+                    button.setAttribute("onclick", "javascript:delete_album( + " + albums[i].idx + ')')
+                    button.setAttribute("value", "삭제")
+
+
                     var div = document.createElement("div");
                     div.setAttribute('class', 'item')
                     div.setAttribute('id', albums[i].idx)
                     div.append(a)
+                    div.append(button)
                     container.append(div)
                 }
 
@@ -69,5 +80,28 @@
             .catch(error => console.log('에러 : error', error));
 
     }
+
+   function delete_album(album_idx) {
+
+       var myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append('Authorization', 'Bearer ' + jwt_key)
+
+
+        var requestOptions = {
+            method: 'DELETE',
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+
+        fetch("{{base_url}}/albums/" + album_idx, requestOptions)
+            .then(response => {
+                return (response.json())
+            }).then(data =>{
+                alert(data)
+                document.getElementById(album_idx).remove()
+        })
+
+   }
 
 </script>

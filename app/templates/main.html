@@ -19,7 +19,7 @@
                 <div class="sidebar-heading border-bottom bg-light">Python Flask Web API</div>
                 <div class="list-group list-group-flush">
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" href="javascript:a()">1. 명언짤 제조</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="javascript:b()">2. Dicom Viewer</a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="javascript:b()">2. DICOM Viewer</a>
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" href="javascript:c()">3. Yolo</a>
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" href="javascript:d()">4. 사진첩</a>
 
@@ -68,6 +68,8 @@
         <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
         <script>
+
+            jwt_key = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYzNjI5ODM4NSwianRpIjoiZDVlMmIxYmQtZGVjZi00YmE3LWEyZDctYTBiYjNlNTM2YTJmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6OCwibmJmIjoxNjM2Mjk4Mzg1fQ.Qg8xftvWHl1gmU4kxEP8Q3F6lbcBhAvo1Jabb1tozNY'
 
             function insertHTML(html, dest, append=false){
                 // if no append is requested, clear the target element
