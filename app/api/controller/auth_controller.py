@@ -54,6 +54,6 @@ class Login(Resource):
                 return '로그인에 실패하였습니다. id와 password 를 확인해주세요', 401
 
         except Exception as e:
-            return '', 500
+            return str(e), 500
 
 

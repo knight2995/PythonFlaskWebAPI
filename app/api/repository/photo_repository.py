@@ -15,7 +15,7 @@ class PhotoRepository:
         db.session.add(_photo)
         db.session.commit()
 
-    def find_photos_by_user_idx(self, album_idx: int):
+    def find_photos_by_album_idx(self, album_idx: int):
 
         return photo.Photo.query.filter_by(album_idx=album_idx).all()
 

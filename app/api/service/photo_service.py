@@ -47,7 +47,7 @@ def photo_download(key: str):
 
 # 모든 사진 조회(앨범 내의)
 def find_all_photos(album_idx: int):
-    photos = photo_repository.find_photos_by_user_idx(album_idx)
+    photos = photo_repository.find_photos_by_album_idx(album_idx)
 
     # 직접 변환
     temp = list(map(lambda x: {'idx': x.idx, 'image_key': x.image_key}, photos))
@@ -65,3 +65,12 @@ def find_photo_data(idx: int):
     _, buffer = cv2.imencode('.jpg', img)
 
     return json.dumps({"imgData": base64.b64encode(buffer).decode('utf-8')})
+
+
+# s3에서 삭제
+def delete_photo_data(photos: list):
+
+    for photo in photos:
+        s3.delete_object(Bucket='knight2995-photo-album', Key=photo.image_key)
+
+
