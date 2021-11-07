@@ -53,6 +53,7 @@ def find_all_photos(album_idx: int):
     temp = list(map(lambda x: {'idx': x.idx, 'image_key': x.image_key}, photos))
     return json.dumps({"photos": temp})
 
+
 # idx에 해당하는 사진 조회 후 반환
 def find_photo_data(idx: int):
 

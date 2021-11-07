@@ -10,7 +10,7 @@ wise_saying_namespace = Namespace(
 
 parser = reqparse.RequestParser()
 parser.add_argument('file', location='files', type=werkzeug.datastructures.FileStorage,
-                    help='사진 파일',
+                    help='이미지 파일',
                     required=True)
 parser.add_argument('text', required=True, help='삽입할 명언(한글 기준)')
 
@@ -33,5 +33,5 @@ class WiseSaying(Resource):
             wise_saying = make_wise_saying(file_object, args['text'])
             return wise_saying, 200
 
-        except Exception:
+        except Exception as e:
             return '', 500

@@ -17,7 +17,7 @@ from pydicom.pixel_data_handlers.util import apply_voi_lut, apply_modality_lut
 # 정규화 등의 작업은 추후 진행
 def detect_yolo(file: werkzeug.datastructures.FileStorage) -> str:
 
-    model = torch.hub.load('ultralytics/yolov5', 'yolov5s')  # or yolov5m, yolov5l, yolov5x, custom
+    model = torch.hub.load('ultralytics/yolov5', 'yolov5x')  # or yolov5m, yolov5l, yolov5x, custom
 
     model.conf = 0.35  # confidence threshold (0-1)
     model.iou = 0.45  # NMS IoU threshold (0-1)

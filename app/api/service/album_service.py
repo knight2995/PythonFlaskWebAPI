@@ -4,7 +4,6 @@ from app.api.model.album import Album
 from app.api.repository.user_repository import user_repository
 from app.api.repository.album_repository import album_repository
 
-
 # 앨범 추가
 def register_album(user_idx: int, album_name: str):
 

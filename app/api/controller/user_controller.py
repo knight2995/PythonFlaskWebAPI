@@ -5,8 +5,8 @@ from app.api.service.user_service import register_user
 from app.api.custom_exception.common_exception import UserDuplicatedException
 
 userNS = Namespace(
-    name="User",
-    description="User 관리",
+    name="user",
+    description="User 추가, 삭제, 조회 API",
 )
 
 parser = reqparse.RequestParser()
@@ -39,5 +39,8 @@ class Users(Resource):
         except Exception as e:
             return '', 500
 
+    # 회원 조회
+
+    """ todo : 해야할 것.. """
 
 

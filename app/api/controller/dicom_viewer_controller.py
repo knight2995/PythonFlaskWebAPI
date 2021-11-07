@@ -6,7 +6,7 @@ from app.api.service.dicom_viewer_service import convert_dicom_image_to_png
 
 dicom_viewer_namespace = Namespace(
     name="DICOM Web Viewer",
-    description="Dicom 을 웹으로 보기 위한 뷰어",
+    description="Dicom 을 웹으로 보기 위한 뷰어 API",
 )
 
 parser = reqparse.RequestParser()
@@ -25,9 +25,12 @@ class DicomViewer(Resource):
     @dicom_viewer_namespace.expect(parser)
     def post(self):
 
+        """ API: DICOM 뷰어 API """
+
         args = parser.parse_args()
 
         file_object = args['file']
+
         try:
             result = convert_dicom_image_to_png(file_object, args['type'])
             return result, 200

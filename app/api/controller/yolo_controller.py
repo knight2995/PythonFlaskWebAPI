@@ -6,12 +6,14 @@ from app.api.service.yolo_service import detect_yolo
 
 yolo_namespace = Namespace(
     name="Yolo Detect",
-    description="Yolo",
+    description="Yolo-v5 테스트 API",
 )
 
 parser = reqparse.RequestParser()
 parser.add_argument('file', location='files',
-                    type=werkzeug.datastructures.FileStorage, required=True)
+                    type=werkzeug.datastructures.FileStorage,
+                    help="이미지 파일",
+                    required=True)
 
 
 @yolo_namespace.route('/')
