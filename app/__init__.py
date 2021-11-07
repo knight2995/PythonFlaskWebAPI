@@ -44,12 +44,21 @@ def create_app():
         aws_access_key_id=app.config['AWS_ACCESS_KEY'],
         aws_secret_access_key=app.config['AWS_SECRET_ACCESS_KEY'])  # 비밀 엑세스 키
 
-
     from app.api.model import user
     from app.api.model import album
     from app.api.model import photo
 
-    api = Api(app, version='0.1', title='API', description='PythonFlaskWebAPI')
+    authorizations = {
+        'apikey': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization',
+            'description': "Type in the *'Value'* input box below: **'Bearer &lt;JWT&gt;'**, where JWT is the token"
+        }
+    }
+
+    api = Api(app, version='0.1', title='API', description='PythonFlaskWebAPI',
+              authorizations=authorizations,)
 
     # controller 등록
     from app.api.controller.wise_saying_controller import wise_saying_namespace

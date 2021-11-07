@@ -9,14 +9,15 @@ albumNS = Namespace(
     description="앨범 정보",
 )
 
+parser = reqparse.RequestParser()
+parser.add_argument('album_name', required=True)
+
 @albumNS.route("")
 class Albums(Resource):
 
     @jwt_required()
+    @albumNS.expect(parser)
     def post(self):
-
-        parser = reqparse.RequestParser()
-        parser.add_argument('album_name', required=True)
 
         args = parser.parse_args()
 

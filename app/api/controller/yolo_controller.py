@@ -9,21 +9,29 @@ yolo_namespace = Namespace(
     description="Yolo",
 )
 
+parser = reqparse.RequestParser()
+parser.add_argument('file', location='files',
+                    type=werkzeug.datastructures.FileStorage, required=True)
+
 
 @yolo_namespace.route('/')
-@yolo_namespace.response(200, 'Found')
-@yolo_namespace.response(404, 'Not found')
+@yolo_namespace.response(200, 'Success')
 @yolo_namespace.response(500, 'Internal Error')
-class DicomViewer(Resource):
+class YoloController(Resource):
+
     @yolo_namespace.doc('post')
+    @yolo_namespace.expect(parser)
     def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('file', location='files',
-                            type=werkzeug.datastructures.FileStorage, required=True)
 
         args = parser.parse_args()
 
         file_object = args['file']
-        v = detect_yolo(file_object)
 
-        return v, 200
+        try:
+            result = detect_yolo(file_object)
+            return result, 200
+
+        except Exception as e:
+            return '', 500
+
+
