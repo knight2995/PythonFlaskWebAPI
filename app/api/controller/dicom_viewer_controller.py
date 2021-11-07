@@ -9,21 +9,30 @@ dicom_viewer_namespace = Namespace(
     description="Dicom 을 웹으로 보기 위한 뷰어",
 )
 
+parser = reqparse.RequestParser()
+parser.add_argument('file', location='files',
+                    type=werkzeug.datastructures.FileStorage, required=True,
+                    help='.dcm 파일(1장짜리)')
+
+parser.add_argument('type', required=True, help='standard or all')
+
 
 @dicom_viewer_namespace.route('/')
 @dicom_viewer_namespace.response(200, 'Found')
-@dicom_viewer_namespace.response(404, 'Not found')
 @dicom_viewer_namespace.response(500, 'Internal Error')
 class DicomViewer(Resource):
     @dicom_viewer_namespace.doc('post')
+    @dicom_viewer_namespace.expect(parser)
     def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('file', location='files',
-                            type=werkzeug.datastructures.FileStorage, required=True)
-        parser.add_argument('type', required=True)
+
         args = parser.parse_args()
 
         file_object = args['file']
-        v = convert_dicom_image_to_png(file_object, args['type'])
+        try:
+            result = convert_dicom_image_to_png(file_object, args['type'])
+            return result, 200
 
-        return v, 200
+        except Exception as e:
+            return 'Internal Error', 500
+
+
