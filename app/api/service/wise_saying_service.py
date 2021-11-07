@@ -14,7 +14,7 @@ def make_wise_saying(file: werkzeug.datastructures.FileStorage, text: str) -> st
     img_height, img_width, _ = img.shape
     if img_width > 512 or img_height > 512:
         ratio = max(img_width, img_height) / 512
-        img = cv2.resize(img, dsize=(0, 0), fx=1/ratio, fy=1/ratio, interpolation=cv2.INTER_AREA)
+        img = cv2.resize(img, dsize=(0, 0), fx=1 / ratio, fy=1 / ratio, interpolation=cv2.INTER_AREA)
 
     # convert to grayScale
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -54,7 +54,12 @@ def make_wise_saying_image(img: np.ndarray, text: str) -> np.ndarray:
 
     wise_saying_image_height, _, _ = wise_saying_image.shape
 
-    wise_saying_image[wise_saying_image_height // 2 - img_height // 2:
-                      wise_saying_image_height // 2 + img_height // 2 + 1, 0: img_width] = img
+    if img.shape[0] % 2 == 0:
+
+        wise_saying_image[wise_saying_image_height // 2 - img_height // 2:
+                          wise_saying_image_height // 2 + img_height // 2, 0: img_width] = img
+    else:
+        wise_saying_image[wise_saying_image_height // 2 - img_height // 2:
+                          wise_saying_image_height // 2 + img_height // 2 + 1, 0: img_width] = img
 
     return wise_saying_image

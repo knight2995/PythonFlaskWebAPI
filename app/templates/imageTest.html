@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+
+
+    <input type="text" id="data" placeholder="imgData 값 넣으면 됨">
+    <input type="button" value="이미지 로드" onclick="load_image()">
+    <br>
+    <img id='image', src="">
+</head>
+<body>
+
+</body>
+
+<script>
+    function load_image() {
+        document.getElementById('image').src = 'data:image/jpeg;base64,' + document.getElementById('data').value
+    }
+
+
+</script>
+</html>

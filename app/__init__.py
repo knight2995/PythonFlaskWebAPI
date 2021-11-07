@@ -57,7 +57,7 @@ def create_app():
         }
     }
 
-    api = Api(app, version='0.1', title='API', description='PythonFlaskWebAPI',
+    api = Api(app, version='0.1', title='API', description='PythonFlaskWebAPI 테스트 페이지',
               authorizations=authorizations,)
 
     # controller 등록
@@ -124,5 +124,9 @@ def create_app():
     def feature4_photos_view():
         idx = request.args.get('idx')
         return render_template('feature4-photos-form.html', base_url=app.config['BASE_URL'], selected_album_idx=idx)
+
+    @app.route("/imageTest")
+    def image_test_view():
+        return render_template('imageTest.html')
 
     return app

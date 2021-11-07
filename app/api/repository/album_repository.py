@@ -1,4 +1,4 @@
-from app.api.model import album
+from app.api.model.album import Album
 from app import db
 
 
@@ -10,17 +10,22 @@ from app import db
 
 class AlbumRepository:
 
-    def register_album(self, _album: album.Album):
-        db.session.add(_album)
+    def register_album(self, album: Album):
+        db.session.add(album)
         db.session.commit()
 
     def find_albums_by_user_idx(self, user_idx: int):
-        # albums = album.Album.objects.filter(user_idx=user_idx)
-        return album.Album.query.filter_by(user_idx=user_idx).all()
-        # user.User.query.filter_by(user_id = user_id).first()
+        return Album.query.filter_by(user_idx=user_idx).all()
 
     def find_album_by_album_idx(self, album_idx: int):
-        return album.Album.query.filter_by(idx=album_idx).first()
+        return Album.query.filter_by(idx=album_idx).first()
+
+    def find_album_by_album_name(self, album_name: str):
+        return Album.query.filter_by(album_name=album_name).first()
+
+    def delete_album_by_album_idx(self, album_idx: int):
+        db.session.delete(Album.query.filter_by(idx=album_idx).first())
+        db.session.commit()
 
 
 album_repository = AlbumRepository()

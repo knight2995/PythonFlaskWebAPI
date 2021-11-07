@@ -14,21 +14,23 @@ from app.api.repository.photo_repository import photo_repository
 
 from app.api.model.photo import Photo
 
+from app.api.custom_exception.common_exception import ForbiddenException
 
 
 def photo_upload(user_idx: int, file: werkzeug.datastructures.FileStorage, album_idx: int):
-
-    # User 정보 가져오기
-
-    # album_idx가 해당 User가 가지고 있는지 확인
     album = album_repository.find_album_by_album_idx(album_idx=album_idx)
 
+    # album_idx 를 해당 User 가 가지고 있는지 확인
+    if album.user_idx != user_idx:
+        raise ForbiddenException
+
     file_data = file.read()
+
     img_key = str(user_idx) + '_' + hashlib.md5(file_data).hexdigest()
 
     s3.put_object(Body=file_data, Bucket='knight2995-photo-album', Key=img_key)
 
-    photo = Photo(file_name = file.filename, image_key= img_key, album = album)
+    photo = Photo(file_name=file.filename, image_key=img_key, album=album)
 
     photo_repository.register_photo(photo)
 
@@ -56,7 +58,6 @@ def find_all_photos(album_idx: int):
 
 # idx에 해당하는 사진 조회 후 반환
 def find_photo_data(idx: int):
-
     photo = photo_repository.find_photo_by_idx(photo_idx=idx)
 
     data = s3.get_object(Bucket='knight2995-photo-album', Key=photo.image_key).get('Body').read()
@@ -67,10 +68,12 @@ def find_photo_data(idx: int):
     return json.dumps({"imgData": base64.b64encode(buffer).decode('utf-8')})
 
 
+def delete_photo(photo_idx: int):
+    delete_photo_data([photo_repository.find_photo_by_idx(photo_idx)])
+    photo_repository.delete_photo_by_idx(photo_idx)
+
+
 # s3에서 삭제
 def delete_photo_data(photos: list):
-
     for photo in photos:
         s3.delete_object(Bucket='knight2995-photo-album', Key=photo.image_key)
-
-

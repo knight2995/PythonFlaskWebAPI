@@ -36,6 +36,6 @@ class YoloController(Resource):
             return result, 200
 
         except Exception as e:
-            return '', 500
+            return str(e), 500
 
 

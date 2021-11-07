@@ -36,6 +36,6 @@ class DicomViewer(Resource):
             return result, 200
 
         except Exception as e:
-            return 'Internal Error', 500
+            return str(e), 500
 
 
