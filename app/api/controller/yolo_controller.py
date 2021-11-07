@@ -1,3 +1,5 @@
+import json
+
 import werkzeug.datastructures
 from flask_restx import Resource, Namespace, reqparse
 
@@ -32,10 +34,10 @@ class YoloController(Resource):
         file_object = args['file']
 
         try:
-            result = detect_yolo(file_object)
-            return result, 200
+            detected_image = detect_yolo(file_object)
+            return json.dumps({"imgData": detected_image}, ensure_ascii=False), 200
 
         except Exception as e:
-            return str(e), 500
+            return json.dumps({"msg": str(e)}, ensure_ascii=False), 500
 
 

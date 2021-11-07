@@ -1,11 +1,6 @@
 from app.api.model.album import Album
+
 from app import db
-
-
-# user = User(id='1', username='김동현', email='악', password='2')
-# album = Album(user=user, id = '2', username='테스트중')
-# db.session.add(album)
-# db.session.commit()
 
 
 class AlbumRepository:
@@ -28,7 +23,7 @@ class AlbumRepository:
         db.session.commit()
 
     def find_album_by_album_name_and_user_idx(self, album_name: str, user_idx: int):
-        return Album.query.filter_by(album_name=album_name, user_idx = user_idx).first()
+        return Album.query.filter_by(album_name=album_name, user_idx=user_idx).first()
 
 
 album_repository = AlbumRepository()

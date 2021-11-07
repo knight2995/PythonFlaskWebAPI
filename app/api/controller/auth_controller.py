@@ -1,20 +1,18 @@
 import json
 
+from flask_jwt_extended import create_access_token
 from flask_restx import Resource, Namespace, reqparse
 
 from app.api.model.user import User
-from app.api.service import auth_service
-
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from app.api.service.auth_service import auth_service
 
 authNS = Namespace(
     name="auth",
     description="로그인 인증(JWT)",
 )
 
-
 parser = reqparse.RequestParser()
-parser.add_argument('id', location='form', required=True )
+parser.add_argument('id', location='form', required=True)
 parser.add_argument('password', location='form', required=True)
 
 
@@ -36,16 +34,13 @@ class Login(Resource):
 
         # 넘어온 id, password 로 해당 User 조회
         try:
-
             find_user = auth_service.check_id_pw(user)
 
             if find_user:
                 access_token = create_access_token(identity=find_user.idx, expires_delta=False)
                 return json.dumps({"token": access_token}), 200
             else:
-                return '로그인에 실패하였습니다. id와 password 를 확인해주세요', 401
+                return json.dumps({"msg": str('로그인에 실패하였습니다. id와 password 를 확인해주세요')}, ensure_ascii=False), 401
 
         except Exception as e:
-            return str(e), 500
-
-
+            return json.dumps({"msg": str(e)}), 500

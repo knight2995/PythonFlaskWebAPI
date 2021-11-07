@@ -7,6 +7,7 @@ class Config(object):
     AWS_SECRET_ACCESS_KEY = secret_config.aws_secret_access_key
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_SECRET_KEY = secret_config.jwt_secret_key
+    RESTX_MASK_SWAGGER = False
 
 
 class DevelopmentConfig(Config):

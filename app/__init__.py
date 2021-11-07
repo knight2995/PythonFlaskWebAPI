@@ -1,24 +1,21 @@
-from flask import Flask, render_template, request
-from flask_restx import Api
-from flask_cors import CORS
-
 import boto3
+
 from flask import Flask, render_template
+from flask import request
+from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from flask_restx import Api
 from flask_sqlalchemy import SQLAlchemy
 
-import sys
-
 db = SQLAlchemy()
 migrate = Migrate()
+
 
 s3 = None
 
 
 def create_app():
-
     global s3
 
     app = Flask(__name__,
@@ -58,7 +55,7 @@ def create_app():
     }
 
     api = Api(app, version='0.1', title='API', description='PythonFlaskWebAPI 테스트 페이지',
-              authorizations=authorizations,)
+              authorizations=authorizations, )
 
     # controller 등록
     from app.api.controller.wise_saying_controller import wise_saying_namespace
@@ -79,27 +76,26 @@ def create_app():
     api.add_namespace(albumNS, '/albums')
     api.add_namespace(photoNS, '/photos')
 
-
     # 테스트를 위한 더미 등록
     @app.route("/main")
     def mainView():
         return render_template('main.html', base_url=app.config['BASE_URL'])
 
-    @app.route("/명언제조기")
-    def 명언제조기():
-        return render_template('feature1.html', base_url=app.config['BASE_URL'])
+    @app.route("/make_fake_wise_saying")
+    def make_fake_wise_saying_view():
+        return render_template('make_fake_wise_saying.html', base_url=app.config['BASE_URL'])
 
-    @app.route("/DICOM뷰어")
-    def DICOM뷰어():
-        return render_template('feature2.html', base_url=app.config['BASE_URL'])
+    @app.route("/DICOM_viewer")
+    def DICOM_viewer_view():
+        return render_template('DICOM_viewer.html', base_url=app.config['BASE_URL'])
 
-    @app.route("/Yolo")
-    def Yolo():
-        return render_template('feature3.html', base_url=app.config['BASE_URL'])
+    @app.route("/yolo_detect")
+    def yolo_detect_view():
+        return render_template('yolo_detect.html', base_url=app.config['BASE_URL'])
 
     @app.route("/photoAlbum")
     def photo_album_view():
-        return render_template('feature4.html', base_url=app.config['BASE_URL'])
+        return render_template('photoAlbum.html', base_url=app.config['BASE_URL'])
 
     @app.route("/feature4-register-form")
     def feature4_register_view():

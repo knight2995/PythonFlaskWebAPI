@@ -1,3 +1,5 @@
+import json
+
 import werkzeug.datastructures
 from flask_restx import Resource, Namespace, reqparse
 
@@ -32,10 +34,10 @@ class DicomViewer(Resource):
         file_object = args['file']
 
         try:
-            result = convert_dicom_image_to_png(file_object, args['type'])
-            return result, 200
+            image_data, tags = convert_dicom_image_to_png(file_object, args['type'])
+            return json.dumps({"imgData": image_data, "tags": tags}), 200
 
         except Exception as e:
-            return str(e), 500
+            return json.dumps({"msg": str(e)}, ensure_ascii=False), 500
 
 

@@ -1,7 +1,9 @@
+import json
+
 from flask_restx import Resource, Namespace, reqparse
 from app.api.model.user import User
 
-from app.api.service.user_service import register_user, find_user_by_idx, delete_user_by_idx
+from app.api.service.user_service import user_service
 from app.api.custom_exception.common_exception import UserDuplicatedException, NotExistUser
 
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -35,41 +37,46 @@ class Users(Resource):
         user = User(user_id=args['id'], password=args['password'])
 
         try:
-            register_user(user)
-            return "Success", 200
+            user_service.register_user(user)
+            return json.dumps({"msg": "회원 가입 성공"}, ensure_ascii=False), 200
 
         except UserDuplicatedException as e:
-            return str(e), 409
+            return json.dumps({"msg": str(e)}, ensure_ascii=False), 409
 
         except Exception as e:
-            return str(e), 500
+            return json.dumps({"msg": str(e)}, ensure_ascii=False), 500
 
     # 회원 조회
     @jwt_required()
     @userNS.doc(security='apikey')
     def get(self):
-        """ todo : 해야할 것.. """
+        """ API: User 정보 조회 """
 
         user_idx = get_jwt_identity()
 
         try:
-            user = find_user_by_idx(user_idx)
-            return str(user_idx), 200
+            user = user_service.find_user_by_idx(user_idx)
+            return json.dumps({"user_idx": user_idx}, ensure_ascii=False), 200
+
+        except NotExistUser as e:
+            json.dumps({"msg": str(e)}, ensure_ascii=False), 400
 
         except Exception as e:
-            return str(e), 500
+            return json.dumps({"msg": str(e)}, ensure_ascii=False), 500
 
     # 회원 삭제(탈퇴)
     @jwt_required()
     @userNS.doc(security='apikey')
     def delete(self):
-        """ todo : 해야할 것.. """
+
+        """ API: User 삭제 """
 
         try:
-            delete_user_by_idx(get_jwt_identity())
-            return '', 200
+            user_service.delete_user_by_idx(get_jwt_identity())
+            return json.dumps({"msg": "삭제 성공"}, ensure_ascii=False), 200
+
         except NotExistUser as e:
-            return str(e), 400
+            json.dumps({"msg": str(e)}, ensure_ascii=False), 400
 
         except Exception as e:
-            return str(e), 200
+            json.dumps({"msg": str(e)}, ensure_ascii=False), 500

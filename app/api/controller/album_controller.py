@@ -1,8 +1,9 @@
+import json
+
 from flask_restx import Resource, Namespace, reqparse
-
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.api.service import album_service
 
+from app.api.service.album_service import album_service
 from app.api.custom_exception.common_exception import AlbumDuplicatedException
 
 albumNS = Namespace(
@@ -28,11 +29,11 @@ class Album(Resource):
         try:
 
             album_service.delete_album(album_idx, get_jwt_identity())
-            return 'Success', 200
+            return json.dumps({'msg': '앨범 삭제 성공'}, ensure_ascii=False), 200
 
         except Exception as e:
 
-            return str(e), 400
+            return json.dumps({'msg': str(e)}, ensure_ascii=False), 500
 
 
 parser = reqparse.RequestParser()
@@ -58,13 +59,13 @@ class Albums(Resource):
 
         try:
             album_service.register_album(user_idx=get_jwt_identity(), album_name=args['album_name'])
-            return 'Success', 200
+            return json.dumps({'msg': '앨범 추가 성공'}, ensure_ascii=False), 200
 
         except AlbumDuplicatedException as e:
-            return str(e), 409
+            return json.dumps({'msg': str(e)}, ensure_ascii=False), 409
 
         except Exception as e:
-            return str(e), 500
+            return json.dumps({'msg': str(e)}, ensure_ascii=False), 500
 
     @jwt_required()
     @albumNS.doc(security='apikey')
@@ -75,4 +76,6 @@ class Albums(Resource):
         idx 값은 사진 추가 및 앨범 삭제에 이용
         """
 
-        return album_service.find_all_albums(get_jwt_identity()), 200
+        albums = album_service.find_all_albums(get_jwt_identity())
+
+        return json.dumps({"albums": albums}, ensure_ascii=False), 200

@@ -1,4 +1,5 @@
 from app.api.model.photo import Photo
+
 from app import db
 
 

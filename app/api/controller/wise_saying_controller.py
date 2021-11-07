@@ -1,3 +1,5 @@
+import json
+
 import werkzeug.datastructures
 from flask_restx import Resource, Namespace, reqparse
 
@@ -30,8 +32,8 @@ class WiseSaying(Resource):
         file_object = args['file']
 
         try:
-            wise_saying = make_wise_saying(file_object, args['text'])
-            return wise_saying, 200
+            wise_saying_image = make_wise_saying(file_object, args['text'])
+            return json.dumps({"imgData": wise_saying_image}, ensure_ascii=False), 200
 
         except Exception as e:
-            return str(e), 500
+            return json.dumps({"msg": str(e)}, ensure_ascii=False), 500

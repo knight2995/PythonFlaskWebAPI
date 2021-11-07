@@ -1,11 +1,14 @@
+import base64
+import json
+
 import numpy as np
 import werkzeug.datastructures
-from cv2 import cv2
 from PIL import ImageFont, ImageDraw, Image
-import base64, json
+from cv2 import cv2
 
 
 def make_wise_saying(file: werkzeug.datastructures.FileStorage, text: str) -> str:
+
     # load Image
     img = cv2.imdecode(np.fromstring(file.read(), np.uint8), cv2.IMREAD_UNCHANGED)
 
@@ -29,7 +32,7 @@ def make_wise_saying(file: werkzeug.datastructures.FileStorage, text: str) -> st
 
     _, buffer = cv2.imencode('.jpg', wise_saying_image)
 
-    return json.dumps({"imgData": str(base64.b64encode(buffer))[2:-1]})
+    return base64.b64encode(buffer).decode('utf-8')
 
 
 def make_wise_saying_image(img: np.ndarray, text: str) -> np.ndarray:

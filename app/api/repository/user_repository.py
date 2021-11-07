@@ -1,4 +1,5 @@
 from app.api.model.user import User
+
 from app import db
 
 

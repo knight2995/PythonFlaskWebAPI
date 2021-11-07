@@ -1,14 +1,15 @@
+import json
+
 import werkzeug
 from flask_restx import Resource, Namespace, reqparse
-
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.api.service.photo_service import photo_upload, photo_download, find_all_photos, find_photo_data, delete_photo_data, delete_photo
 
+from app.api.service.photo_service import photo_service
 from app.api.custom_exception.common_exception import ForbiddenException
 
 photoNS = Namespace(
     name="photo",
-    description="사진을 올리고 다운로드 하고 보는 컨트롤러",
+    description="사진을 업로드 및 다운로드, 삭제 API",
 )
 
 
@@ -23,22 +24,22 @@ class Photo(Resource):
     def get(self, photo_idx):
 
         try:
-            ret = find_photo_data(photo_idx)
-            return ret, 200
+            image_data = photo_service.find_photo_data(photo_idx)
+            return json.dumps({"imgData": image_data}), 200
 
         except ForbiddenException as e:
-            return str(e), 403
+            return json.dump({"msg": str(e)}, ensure_ascii=False), 403
 
         except Exception as e:
-            return '', 500
+            return json.dump({"msg": str(e)}, ensure_ascii=False), 500
 
     @jwt_required()
     @photoNS.doc(security='apikey')
     def delete(self, photo_idx: int):
 
-        delete_photo(photo_idx)
+        photo_service.delete_photo(photo_idx)
 
-        return '', 200
+        return json.dumps({"msg": "삭제 성공"}, ensure_ascii=False), 200
 
 
 parser = reqparse.RequestParser()
@@ -71,12 +72,11 @@ class Photos(Resource):
         args = self.post_parser.parse_args()
 
         try:
-            photo_upload(get_jwt_identity(), args['file'], args['album_idx'])
+            photo_service.photo_upload(get_jwt_identity(), args['file'], args['album_idx'])
+            return json.dumps({"msg": '업로드 성공'}, ensure_ascii=False), 200
 
         except ForbiddenException as e:
-            return str(e), 403
-
-        return 'ok', 200
+            return json.dumps({"msg": str(e)}, ensure_ascii=False), 403
 
     @jwt_required()
     @photoNS.expect(get_parser)
@@ -89,4 +89,5 @@ class Photos(Resource):
 
         args = self.get_parser.parse_args()
 
-        return find_all_photos(args['album_idx']), 200
+        photos = photo_service.find_all_photos(args['album_idx'])
+        return json.dumps({"photos": photos}, ensure_ascii=False), 200

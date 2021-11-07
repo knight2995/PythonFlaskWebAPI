@@ -1,6 +1,7 @@
 from app import db
 
 
+# User Class
 class User(db.Model):
     __table_name__ = 'user'
 

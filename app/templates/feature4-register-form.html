@@ -33,7 +33,7 @@
                 return response.json()
             })
             .then(data => {
-                alert(data)
+                alert(decodeURI(data))
             })
             .catch(error => console.log('에러 : error', error));
 

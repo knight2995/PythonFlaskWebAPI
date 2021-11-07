@@ -1,18 +1,14 @@
+import base64
+import json
+
 import numpy as np
+import pydicom
 import werkzeug.datastructures
 from cv2 import cv2
-import pydicom
-from PIL import ImageFont, ImageDraw, Image
-import base64, json
-import re
 from skimage import exposure
 
-import matplotlib.pyplot as plt
-from pydicom.pixel_data_handlers.util import apply_voi_lut, apply_modality_lut
 
-
-# 틀만 잡아놓기
-# 정규화 등의 작업은 추후 진행
+#
 def convert_dicom_image_to_png(file: werkzeug.datastructures.FileStorage, type: str) -> str:
     window_center = 50
     window_width = 350
@@ -33,7 +29,7 @@ def convert_dicom_image_to_png(file: werkzeug.datastructures.FileStorage, type: 
     elif type == 'all':
         tags = get_tags_all(ds)
 
-    return json.dumps({"imgData": str(base64.b64encode(buffer))[2:-1], 'tags': tags})
+    return base64.b64encode(buffer).decode('utf-8'), tags
 
 
 def get_tags(ds: pydicom.FileDataset) -> dict:
@@ -75,8 +71,6 @@ def get_tags_all(ds: pydicom.FileDataset) -> list:
         tag.append({'(Value)': v[49:]})
         tags.append(tag)
 
-    # print(meta_tags)
-
     # Simplify implement
     for v in meta_tags.splitlines()[1:]:
         group_element = v[:v.find(')') + 1]
@@ -88,64 +82,5 @@ def get_tags_all(ds: pydicom.FileDataset) -> list:
         tag.append({'(TAG Description)': tag_description})
         tag.append({'(Value)': value})
         tags.append(tag)
-
-    # 안 씀
-    # # tags[''] = str(ds.file_meta.)
-    # tags['FileMetaInformationGroupLength'] = str(ds.file_meta.FileMetaInformationGroupLength)
-    # tags['FileMetaInformationVersion'] = str(ds.file_meta.FileMetaInformationVersion)
-    #
-    # tags['MediaStorageSOPClassUID'] = str(ds.file_meta.MediaStorageSOPClassUID)
-    # tags['MediaStorageSOPInstanceUID'] = str(ds.file_meta.MediaStorageSOPInstanceUID)
-    #
-    # tags['TransferSyntaxUID'] = str(ds.file_meta.TransferSyntaxUID)
-    #
-    # tags['ImplementationClassUID'] = str(ds.file_meta.ImplementationClassUID)
-    # tags['ImplementationVersionName'] = str(ds.file_meta.ImplementationVersionName)
-    #
-    # tags['SourceApplicationEntityTitle'] = str(ds.file_meta.SourceApplicationEntityTitle)
-    #
-    # # tags[''] = str(ds.)
-    # tags['ImageType'] = str(ds.ImageType)
-    # tags['SOPClassUID'] = str(ds.SOPClassUID)
-    # tags['SOPInstanceUID'] = str(ds.SOPInstanceUID)
-    # tags['StudyDate'] = str(ds.StudyDate)
-    # tags['SeriesDate'] = str(ds.SeriesDate)
-    # tags['AcquisitionDate'] = str(ds.AcquisitionDate)
-    # tags['ContentDate'] = str(ds.ContentDate)
-    # tags['StudyTime'] = str(ds.StudyTime)
-    # tags['SeriesTime'] = str(ds.SeriesTime)
-    # tags['AcquisitionTime'] = str(ds.AcquisitionTime)
-    # tags['ContentTime'] = str(ds.ContentTime)
-    # tags['AccessionNumber'] = str(ds.AccessionNumber)
-    # tags['Modality'] = str(ds.Modality)
-    # tags['Manufacturer'] = str(ds.Manufacturer)
-    # tags['InstitutionName'] = str(ds.InstitutionName)
-    # tags['InstitutionAddress'] = str(ds.InstitutionAddress)
-    # tags['ReferringPhysicianName'] = str(ds.ReferringPhysicianName)
-    # tags['StationName'] = str(ds.StationName)
-    # tags['StudyDescription'] = str(ds.StudyDescription)
-    # tags['ProcedureCodeSequence'] = str(ds.ProcedureCodeSequence)
-    #
-    # tags['CodeValue'] = str(ds.ProcedureCodeSequence)
-    #
-    # # tags[''] = str(ds.)
-    # # tags[''] = str(ds.)
-    # # tags[''] = str(ds.)
-    #
-    # tags['PatientName'] = str(ds.PatientName)
-    # tags['PatientID'] = str(ds.PatientID)
-    # tags['PatientBirthDate'] = str(ds.PatientBirthDate)
-    # tags['PatientSex'] = str(ds.PatientSex)
-    # tags['PatientAge'] = str(ds.PatientAge)
-    #
-    # tags['StudyDate'] = str(ds.StudyDate)
-    # tags['StudyTime'] = str(ds.StudyTime)
-    # tags['StudyID'] = str(ds.StudyID)
-    #
-    # tags['StudyDescription'] = str(ds.StudyDescription)
-    #
-    # tags['SeriesDate'] = str(ds.SeriesDate)
-    # tags['SeriesTime'] = str(ds.SeriesTime)
-    # tags['SeriesDescription'] = str(ds.SeriesDescription)
 
     return tags
