@@ -23,6 +23,8 @@ class YoloController(Resource):
     @yolo_namespace.expect(parser)
     def post(self):
 
+        """ API: Yolo-v5 detect API """
+
         args = parser.parse_args()
 
         file_object = args['file']
