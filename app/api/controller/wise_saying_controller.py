@@ -23,6 +23,8 @@ class WiseSaying(Resource):
     @wise_saying_namespace.expect(parser)
     def post(self):
 
+        """ API: 명언짤제조 API """
+
         args = parser.parse_args()
 
         file_object = args['file']
