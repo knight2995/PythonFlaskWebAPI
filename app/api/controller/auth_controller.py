@@ -13,19 +13,9 @@ authNS = Namespace(
 )
 
 
-@authNS.route("/test")
-class Test(Resource):
-
-    @jwt_required()
-    @authNS.doc(security='apikey')
-    def get(self):
-
-        return get_jwt_identity(), 200
-
-
 parser = reqparse.RequestParser()
-parser.add_argument('id', required=True)
-parser.add_argument('password', required=True)
+parser.add_argument('id', location='form', required=True )
+parser.add_argument('password', location='form', required=True)
 
 
 @authNS.route("/login")
@@ -36,6 +26,8 @@ class Login(Resource):
 
     @authNS.expect(parser)
     def post(self):
+
+        """ API: 로그인 API """
 
         args = parser.parse_args()
 

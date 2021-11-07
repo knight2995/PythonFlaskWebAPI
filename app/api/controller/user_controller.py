@@ -36,12 +36,13 @@ class Users(Resource):
 
         try:
             register_user(user)
+            return "Success", 200
 
         except UserDuplicatedException as e:
             return str(e), 409
 
         except Exception as e:
-            return '', 500
+            return str(e), 500
 
     # 회원 조회
     @jwt_required()
@@ -56,7 +57,7 @@ class Users(Resource):
             return str(user_idx), 200
 
         except Exception as e:
-            return '', 500
+            return str(e), 500
 
     # 회원 삭제(탈퇴)
     @jwt_required()
@@ -70,6 +71,5 @@ class Users(Resource):
         except NotExistUser as e:
             return str(e), 400
 
-
-
-        return '', 200
+        except Exception as e:
+            return str(e), 200

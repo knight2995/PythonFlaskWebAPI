@@ -12,7 +12,7 @@ parser = reqparse.RequestParser()
 parser.add_argument('file', location='files', type=werkzeug.datastructures.FileStorage,
                     help='이미지 파일',
                     required=True)
-parser.add_argument('text', required=True, help='삽입할 명언(한글 기준)')
+parser.add_argument('text', required=True, help='삽입할 명언(한글 기준)', location='form')
 
 
 @wise_saying_namespace.route('/')
@@ -34,4 +34,4 @@ class WiseSaying(Resource):
             return wise_saying, 200
 
         except Exception as e:
-            return '', 500
+            return str(e), 500
