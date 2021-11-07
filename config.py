@@ -17,5 +17,5 @@ class DevelopmentConfig(Config):
 
 class DeployConfig(Config):
     DEBUG = False
-    BASE_URL = 'http://13.124.151.134'
+    BASE_URL = 'http://knight2995.site'
     PORT = 80
