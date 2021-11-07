@@ -1,25 +1,28 @@
-from app.api.model import user
+from app.api.model.user import User
 from app import db
 
-# user = User(id='1', username='김동현', email='악', password='2')
-# album = Album(user=user, id = '2', username='테스트중')
-# db.session.add(album)
-# db.session.commit()
 
 class UserRepository:
 
-    def register_member(self, _user: user.User):
+    def register_member(self, user: User):
 
-        db.session.add(_user)
+        db.session.add(user)
         db.session.commit()
 
     def find_user_by_user_id(self, user_id: str):
 
-        return user.User.query.filter_by(user_id=user_id).first()
+        return User.query.filter_by(user_id=user_id).first()
 
     def find_user_by_user_idx(self, user_idx: int):
 
-        return user.User.query.filter_by(idx=user_idx).first()
+        return User.query.filter_by(idx=user_idx).first()
+
+    def delete_user_by_user_idx(self, user_idx: int):
+
+        db.session.delete(User.query.filter_by(idx=user_idx).first())
+        db.session.commit()
+
+
 
 
 user_repository = UserRepository()

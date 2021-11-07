@@ -10,7 +10,7 @@ class Photo(db.Model):
     image_key = db.Column(db.String(300), nullable=False)
 
     album_idx = db.Column(db.Integer, db.ForeignKey('album.idx',  ondelete='CASCADE'))
-    album = db.relationship('Album', backref=db.backref('ref_album'))
+    album = db.relationship('Album', backref=db.backref('ref_album', cascade='all, delete-orphan'))
 
     def __repr__(self):
-        return f"<Photo('{self.id}', '{self.file_name}', '{self.image_key}')>"
+        return f"<Photo('{self.idx}', '{self.file_name}', '{self.image_key}')>"
