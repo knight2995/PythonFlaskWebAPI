@@ -9,6 +9,8 @@ from flask_migrate import Migrate
 from flask_restx import Api
 from flask_sqlalchemy import SQLAlchemy
 
+import sys
+
 db = SQLAlchemy()
 migrate = Migrate()
 
@@ -16,6 +18,7 @@ s3 = None
 
 
 def create_app():
+
     global s3
 
     app = Flask(__name__,
@@ -23,7 +26,10 @@ def create_app():
                 static_folder='web/static',
                 )
 
-    app.config.from_object('config.DevelopmentConfig')
+    if app.env == 'development':
+        app.config.from_object('config.DevelopmentConfig')
+    else:
+        app.config.from_object('config.DeployConfig')
 
     # 시간 관계상 모두 허용
     CORS(app, resources={r"*": {"origins": "*"}})
