@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>사진첩 API 테스트 페이지</title>
+    <title>사진첩 기능 페이지</title>
     <script type="javascript">
 
         function insertHTML(html, dest, append=false) {
@@ -30,14 +30,24 @@
 
 
     </script>
-    <pre>
-        <a href="javascript:load_register_form()">1. 회원가입 </a>
-        <a href="javascript:load_login_form()">2. 로그인(JWT) </a>
-        <a href="javascript:load_user_form()">2-1. 로그인 확인(JWT 필요)</a>
-        <a href="javascript:load_make_album_form()">3. 앨범 생성 </a>
-        <a href="javascript:load_read_album_form()">4. 앨범 조회 </a>
-        <a href="javascript:load_albums_form()">5. 기능 </a>
-    </pre>
+
+    <div id="content-form" class="container-fluid">
+                    <h1 class="mt-4">설명</h1>
+                    <p>총 4개의 기능이 구현되어 있습니다.</p>
+                    <p>
+                        <a href="javascript:load_register_form()">1. 회원가입 </a><br>
+                            - ID 와 PASSWORD 를 입력 받습니다.<br>
+                        <a href="javascript:load_login_form()">2. 로그인(JWT) </a><br>
+                            - ID 와 PASSWORD 를 입력 받습니다.<br>
+                        <a href="javascript:load_user_form()">2-1. 로그인 확인(JWT 필요)</a><br>
+                            - 현재 등록된 JWT 를 확인할 수 있습니다.<br>
+                        <a href="javascript:load_make_album_form()">3. 앨범 생성 </a><br>
+                            - 앨범 명을 입력 받아 앨범을 생성할 수 있습니다.<br>
+                        <a href="javascript:load_albums_form()">4. 앨범 조회 및 이미지 업로드/조회 테스트</a><br>
+                            - 기능
+
+                    </p>
+                </div>
 
 
     <div id = 'container'>
