@@ -5,7 +5,7 @@ from flask_restx import Resource, Namespace, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from app.api.service.photo_service import photo_service
-from app.api.custom_exception.common_exception import ForbiddenException, NotExistPhoto
+from app.api.custom_exception.common_exception import ForbiddenException, NotExistPhoto, NotExistUser
 
 photoNS = Namespace(
     name="photo",
@@ -36,6 +36,9 @@ class Photo(Resource):
             image_data = photo_service.find_photo_data(photo_idx)
             return json.dumps({"imgData": image_data}), 200
 
+        except NotExistUser as e:
+            return json.dumps({'msg': str(e)}, ensure_ascii=False), 400
+
         except ForbiddenException as e:
             return json.dump({"msg": str(e)}, ensure_ascii=False), 403
 
@@ -56,8 +59,11 @@ class Photo(Resource):
         """
 
         try:
-            photo_service.delete_photo(photo_idx, get_jwt_identity())
+            photo_service.delete_photo_by_idx(photo_idx, get_jwt_identity())
             return json.dumps({"msg": "삭제 성공"}, ensure_ascii=False), 200
+
+        except NotExistUser as e:
+            return json.dumps({'msg': str(e)}, ensure_ascii=False), 400
 
         except ForbiddenException as e:
             return json.dumps({"msg": str(e)}, ensure_ascii=False), 403

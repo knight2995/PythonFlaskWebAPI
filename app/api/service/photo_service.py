@@ -8,15 +8,12 @@ import werkzeug.datastructures
 from cv2 import cv2
 
 from app import s3
-
+from app.api.custom_exception.common_exception import ForbiddenException, NotExistPhoto, NotExistAlbum, NotExistUser
+from app.api.model.photo import Photo
 # 포토 업로드
 from app.api.repository.album_repository import album_repository
 from app.api.repository.photo_repository import photo_repository
 from app.api.repository.user_repository import user_repository
-
-from app.api.model.photo import Photo
-
-from app.api.custom_exception.common_exception import ForbiddenException, NotExistPhoto, NotExistAlbum
 
 
 class PhotoService:
@@ -58,6 +55,12 @@ class PhotoService:
     # 모든 사진 조회(앨범 내의)
     def find_all_photos(self, album_idx: int, user_idx: int):
 
+        # user 존재 여부 체크
+        user = user_repository.find_user_by_user_idx(user_idx=user_idx)
+
+        if user is None:
+            raise NotExistUser
+
         # 앨범이 존재하는 지 여부 확인
         album = album_repository.find_album_by_album_idx(album_idx)
 
@@ -93,6 +96,12 @@ class PhotoService:
 
     # photo_idx 에 해당하는 이미지 삭제
     def delete_photo_by_idx(self, photo_idx: int, user_idx: int):
+
+        # user 존재 여부 체크
+        user = user_repository.find_user_by_user_idx(user_idx=user_idx)
+
+        if user is None:
+            raise NotExistUser
 
         # 사진의 존재 여부 확인
         photo = photo_repository.find_photo_by_idx(photo_idx)

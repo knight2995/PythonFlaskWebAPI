@@ -1,8 +1,7 @@
 import base64
-import json
-import torch
 
 import numpy as np
+import torch
 import werkzeug.datastructures
 from cv2 import cv2
 

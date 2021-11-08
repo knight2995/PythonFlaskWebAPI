@@ -4,7 +4,7 @@ from flask_restx import Resource, Namespace, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from app.api.service.album_service import album_service
-from app.api.custom_exception.common_exception import AlbumDuplicatedException, NotExistAlbum
+from app.api.custom_exception.common_exception import AlbumDuplicatedException, NotExistAlbum, NotExistUser
 
 albumNS = Namespace(
     name="album",
@@ -69,6 +69,9 @@ class Albums(Resource):
             album_service.register_album(user_idx=get_jwt_identity(), album_name=args['album_name'])
             return json.dumps({'msg': '앨범 추가 성공'}, ensure_ascii=False), 200
 
+        except NotExistUser as e:
+            return json.dumps({'msg': str(e)}, ensure_ascii=False), 400
+
         except AlbumDuplicatedException as e:
             return json.dumps({'msg': str(e)}, ensure_ascii=False), 409
 
@@ -87,6 +90,10 @@ class Albums(Resource):
 
         """
 
-        albums = album_service.find_all_albums(get_jwt_identity())
+        try:
+            albums = album_service.find_all_albums(get_jwt_identity())
+
+        except NotExistUser as e:
+            return json.dumps({'msg': str(e)}, ensure_ascii=False), 400
 
         return json.dumps({"albums": albums}, ensure_ascii=False), 200

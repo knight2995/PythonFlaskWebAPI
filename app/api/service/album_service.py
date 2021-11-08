@@ -1,12 +1,11 @@
-import json
-
 from app.api.model.album import Album
 
 from app.api.repository.photo_repository import photo_repository
 from app.api.repository.user_repository import user_repository
 from app.api.repository.album_repository import album_repository
 
-from app.api.custom_exception.common_exception import NotExistAlbum, AlbumDuplicatedException, ForbiddenException
+from app.api.custom_exception.common_exception import NotExistAlbum, AlbumDuplicatedException, ForbiddenException, \
+    NotExistUser
 
 from app.api.service.photo_service import photo_service
 
@@ -16,8 +15,11 @@ class AlbumService:
     # 앨범 추가
     def register_album(self, user_idx: int, album_name: str):
 
-        # user
+        # user 존재 여부 체크
         user = user_repository.find_user_by_user_idx(user_idx=user_idx)
+
+        if user is None:
+            raise NotExistUser
 
         self.validate_duplicated_album_name(album_name, user_idx)
 
@@ -34,6 +36,12 @@ class AlbumService:
     # 모든 앨범 조회
     def find_all_albums(self, user_idx: int):
 
+        # user 존재 여부 체크
+        user = user_repository.find_user_by_user_idx(user_idx=user_idx)
+
+        if user is None:
+            raise NotExistUser
+
         albums = album_repository.find_albums_by_user_idx(user_idx)
 
         # 직접 변환
@@ -41,6 +49,12 @@ class AlbumService:
 
     # 앨범 삭제
     def delete_album(self, album_idx: int, user_idx: int):
+
+        # user 존재 여부 체크
+        user = user_repository.find_user_by_user_idx(user_idx=user_idx)
+
+        if user is None:
+            raise NotExistUser
 
         # 앨범 존재 여부 체크
         album = album_repository.find_album_by_album_idx(album_idx)
