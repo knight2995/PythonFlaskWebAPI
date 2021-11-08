@@ -25,7 +25,13 @@ class Login(Resource):
     @authNS.expect(parser)
     def post(self):
 
-        """ API: 로그인 API """
+        """ API: 로그인 API
+
+        id, password 를 이용해서 로그인하는 API입니다.
+        실행 시 token 값을 얻을 수 있고 이를 이용해 다른 API의 인증에 사용됩니다.
+        웹페이지 상단의 Authorize 를 눌러 JWT 를 입력하면 사용하실 수 있습니다.
+
+        """
 
         args = parser.parse_args()
 
@@ -34,13 +40,13 @@ class Login(Resource):
 
         # 넘어온 id, password 로 해당 User 조회
         try:
-            find_user = auth_service.check_id_pw(user)
+            find_user = auth_service.login(user)
 
             if find_user:
                 access_token = create_access_token(identity=find_user.idx, expires_delta=False)
                 return json.dumps({"token": access_token}), 200
             else:
-                return json.dumps({"msg": str('로그인에 실패하였습니다. id와 password 를 확인해주세요')}, ensure_ascii=False), 401
+                return json.dumps({"msg": '로그인에 실패하였습니다. id와 password 를 확인해주세요'}, ensure_ascii=False), 401
 
         except Exception as e:
             return json.dumps({"msg": str(e)}), 500

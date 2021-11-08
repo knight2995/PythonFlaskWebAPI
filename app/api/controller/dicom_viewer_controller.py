@@ -16,7 +16,7 @@ parser.add_argument('file', location='files',
                     type=werkzeug.datastructures.FileStorage, required=True,
                     help='.dcm 파일(1장짜리)')
 
-parser.add_argument('type', required=True, help='standard or all')
+parser.add_argument('type', required=False, help='standard or all', default='all')
 
 
 @dicom_viewer_namespace.route('/')
@@ -27,7 +27,14 @@ class DicomViewer(Resource):
     @dicom_viewer_namespace.expect(parser)
     def post(self):
 
-        """ API: DICOM 뷰어 API """
+        """ API: DICOM 뷰어 API
+
+        .dcm(1장 짜리) 파일을 업로드하고 전송하면 결과를 확인할 수 있습니다.
+        type 에 standard 를 입력할 경우 기본적인 태그들을
+        type 에 all 을 입력할 경우 전체 태그를 확인할 수 있습니다.
+        미 입력 혹은 오기 시 all 로 처리합니다
+
+        """
 
         args = parser.parse_args()
 

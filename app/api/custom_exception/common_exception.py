@@ -29,9 +29,18 @@ class NotExistUser(Exception):
     def __str__(self):
         return '존재하지 않는 회원입니다.'
 
+
 class NotExistAlbum(Exception):
     def __init__(self):
         super().__init__('존재하지 않는 앨범입니다.')
 
     def __str__(self):
         return '존재하지 않는 앨범입니다.'
+
+
+class NotExistPhoto(Exception):
+    def __init__(self):
+        super().__init__('존재하지 않는 사진입니다.')
+
+    def __str__(self):
+        return '존재하지 않는 사진입니다.'

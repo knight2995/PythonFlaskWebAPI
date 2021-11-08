@@ -27,7 +27,12 @@ class YoloController(Resource):
     @yolo_namespace.expect(parser)
     def post(self):
 
-        """ API: Yolo-v5 detect API """
+        """ API: Yolo-v5 detect API
+
+        이미지 파일을 업로드하고 전송하면 결과를 확인할 수 있습니다.
+        시간이 오래 걸릴 수 있습니다.(성능 상 문제)
+
+        """
 
         args = parser.parse_args()
 

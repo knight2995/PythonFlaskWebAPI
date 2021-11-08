@@ -4,7 +4,7 @@ from flask_restx import Resource, Namespace, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from app.api.service.album_service import album_service
-from app.api.custom_exception.common_exception import AlbumDuplicatedException
+from app.api.custom_exception.common_exception import AlbumDuplicatedException, NotExistAlbum
 
 albumNS = Namespace(
     name="album",
@@ -23,21 +23,26 @@ class Album(Resource):
     def delete(self, album_idx: int):
 
         """ API: 앨범 삭제
-        album_idx 값에 해당하는 album 삭제
+
+        *JWT 가 필요합니다.
+        album_idx 값에 해당하는 album 을 삭제하는 API 입니다.
+        album_idx 는 GET /albums 을 이용해 얻어올 수 있습니다.
+
         """
 
         try:
-
             album_service.delete_album(album_idx, get_jwt_identity())
             return json.dumps({'msg': '앨범 삭제 성공'}, ensure_ascii=False), 200
 
-        except Exception as e:
+        except NotExistAlbum as e:
+            json.dumps({"msg": str(e)}, ensure_ascii=False), 400
 
+        except Exception as e:
             return json.dumps({'msg': str(e)}, ensure_ascii=False), 500
 
 
 parser = reqparse.RequestParser()
-parser.add_argument('album_name', required=True, help="앨범명")
+parser.add_argument('album_name', required=True, help="앨범명", location='form')
 
 
 @albumNS.route("")
@@ -52,7 +57,10 @@ class Albums(Resource):
     def post(self):
 
         """ API: 앨범 추가 API
-        상단의 Authorize 된 상태에서 가능
+
+        *JWT 가 필요합니다.
+        현재 로그인된 계정에 앨범을 추가하는 API 입니다.
+
         """
 
         args = parser.parse_args()
@@ -72,8 +80,11 @@ class Albums(Resource):
     def get(self):
 
         """ API: 앨범 전체 조회
-        현재 로그인 된 계정의 모든 앨범 정보를 조회
-        idx 값은 사진 추가 및 앨범 삭제에 이용
+
+        *JWT 가 필요합니다.
+        현재 로그인된 계정의 모든 앨범 정보를 조회하는 API 입니다.
+        여기서 조회한 idx 값을 이용해서 사진 추가 및 앨범 삭제에 이용할 수 있습니다.
+
         """
 
         albums = album_service.find_all_albums(get_jwt_identity())

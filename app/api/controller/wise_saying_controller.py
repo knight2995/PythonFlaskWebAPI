@@ -25,7 +25,11 @@ class WiseSaying(Resource):
     @wise_saying_namespace.expect(parser)
     def post(self):
 
-        """ API: 명언짤제조 API """
+        """ API: 명언짤제조 API
+
+        이미지 파일을 업로드하고 전송하면 결과를 확인할 수 있습니다.
+
+        """
 
         args = parser.parse_args()
 

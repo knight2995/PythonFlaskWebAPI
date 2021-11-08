@@ -20,7 +20,7 @@ class UserService:
 
         return user
 
-    # 중복 체크
+    # User id 중복 체크
     def validate_duplicated_user(self, user: User):
         if user_repository.find_user_by_user_id(user.user_id):
             raise UserDuplicatedException
@@ -40,14 +40,15 @@ class UserService:
         if user is None:
             raise NotExistUser
 
-        # 연관된 photo 들의 S3에서의 삭제
+        # 회원을 삭제함으로써 회원이 가졌던 모든 앨범과 그 사진들 삭제
+
         # 1. Album list 조회
         albums = album_repository.find_albums_by_user_idx(user_idx)
 
         # 2. 각 앨범마다 모든 사진 조회
         photos = sum(list(map(lambda album: photo_repository.find_photos_by_album_idx(album.idx), albums)), [])
         # 3. s3에서 삭제
-        photo_service.delete_photo_data(photos)
+        photo_service.delete_photos_data(photos)
 
         # 회원 삭제(cascade 로 DB 상에서 앨범과 사진은 자동으로 삭제)
         user_repository.delete_user_by_user_idx(user_idx)

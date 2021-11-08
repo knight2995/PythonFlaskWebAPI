@@ -11,7 +11,6 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 migrate = Migrate()
 
-
 s3 = None
 
 
@@ -50,11 +49,19 @@ def create_app():
             'type': 'apiKey',
             'in': 'header',
             'name': 'Authorization',
-            'description': "Type in the *'Value'* input box below: **'Bearer &lt;JWT&gt;'**, where JWT is the token"
+            'description': "Bearer token 형태로 입력해주세요. ex) Bearer eyJ0eXAiOiJKV1QiLCJhbGci"
+
         }
     }
 
-    api = Api(app, version='0.1', title='API', description='PythonFlaskWebAPI 테스트 페이지',
+    api = Api(app, version='0.1', title='API Test',
+              description='PythonFlaskWebAPI Document\n'
+                          '해당 페이지는 Swagger 에 의해 작성되었습니다.\n'
+                          '하단에는 API 목록이 나와있습니다.\n'
+                          '목록을 클릭하면 실제 넘어가는 파라미터 값들을 확인할 수 있습니다.\n'
+                          'Try it out 클릭하면 실제 API 를 테스트 해보실 수 있습니다,\n'
+                          '결과는 application/json 값으로 반환됩니다.\n'
+                          ' imgData 값은 base64 인코딩된 이미지로 /imageTest 로 가셔서 확인할 수 있습니다.',
               authorizations=authorizations, )
 
     # controller 등록
@@ -71,8 +78,8 @@ def create_app():
     api.add_namespace(dicom_viewer_namespace, "/dicom-viewer")
     api.add_namespace(yolo_namespace, "/detect-yolo")
 
-    api.add_namespace(authNS, '/auth')
     api.add_namespace(userNS, '/users')
+    api.add_namespace(authNS, '/auth')
     api.add_namespace(albumNS, '/albums')
     api.add_namespace(photoNS, '/photos')
 
@@ -86,7 +93,7 @@ def create_app():
         return render_template('make_fake_wise_saying.html', base_url=app.config['BASE_URL'])
 
     @app.route("/DICOM_viewer")
-    def DICOM_viewer_view():
+    def dicom_viewer_view():
         return render_template('DICOM_viewer.html', base_url=app.config['BASE_URL'])
 
     @app.route("/yolo_detect")

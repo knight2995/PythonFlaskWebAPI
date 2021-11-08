@@ -8,8 +8,9 @@ from cv2 import cv2
 from skimage import exposure
 
 
-#
-def convert_dicom_image_to_png(file: werkzeug.datastructures.FileStorage, type: str) -> str:
+# dicom to png
+# Not Implemented HU 범위에 따른 보정
+def convert_dicom_image_to_png(file: werkzeug.datastructures.FileStorage, _type: str):
     window_center = 50
     window_width = 350
 
@@ -24,15 +25,17 @@ def convert_dicom_image_to_png(file: werkzeug.datastructures.FileStorage, type: 
 
     _, buffer = cv2.imencode('.png', saved_image)
 
-    if type == 'standard':
+    # 태그 정보 파싱
+    if _type == 'standard':
         tags = get_tags(ds)
-    elif type == 'all':
+    else:
         tags = get_tags_all(ds)
 
     return base64.b64encode(buffer).decode('utf-8'), tags
 
 
 def get_tags(ds: pydicom.FileDataset) -> dict:
+
     tags = dict()
 
     tags['PatientName'] = str(ds.PatientName) if hasattr(ds, 'PatientName') else ''
