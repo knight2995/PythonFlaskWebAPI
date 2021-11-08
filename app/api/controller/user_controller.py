@@ -1,4 +1,4 @@
-import json
+import json, hashlib
 
 from flask_restx import Resource, Namespace, reqparse
 from app.api.model.user import User
@@ -39,8 +39,9 @@ class Users(Resource):
         """
 
         args = parser.parse_args()
+        hashed_password = hashlib.sha256((args['password'] + 'testAPI').encode()).hexdigest()
 
-        user = User(user_id=args['id'], password=args['password'])
+        user = User(user_id=args['id'], password=hashed_password)
 
         try:
             user_service.register_user(user)

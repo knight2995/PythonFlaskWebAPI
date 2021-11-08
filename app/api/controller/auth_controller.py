@@ -1,3 +1,4 @@
+import hashlib
 import json
 
 from flask_jwt_extended import create_access_token
@@ -34,9 +35,10 @@ class Login(Resource):
         """
 
         args = parser.parse_args()
+        hashed_password = hashlib.sha256((args['password'] + 'testAPI').encode()).hexdigest()
 
         # User 객체 생성
-        user = User(user_id=args['id'], password=args['password'])
+        user = User(user_id=args['id'], password=hashed_password)
 
         # 넘어온 id, password 로 해당 User 조회
         try:
