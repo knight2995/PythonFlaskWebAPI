@@ -48,6 +48,7 @@
 
         var formdata = new FormData();
         formdata.append("file", document.getElementById("file").files[0])
+        formdata.append('album_idx', document.getElementById('album_idx').value)
 
 
         var requestOptions = {
@@ -57,7 +58,12 @@
             redirect: 'follow'
         };
 
-        fetch("{{base_url}}/photos?album_idx=" + document.getElementById('album_idx').value, requestOptions)
+        if (document.getElementById("file").files[0] === undefined){
+            alert('파일은 선택해주세요')
+            return
+        }
+
+        fetch("{{base_url}}/photos", requestOptions)
             .then(response => {
                 return (response.json())
             })
